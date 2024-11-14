@@ -55,6 +55,16 @@ namespace ByteConverter
             using (var fileStream = new FileStream(binPath, FileMode.Create, FileAccess.Write, FileShare.None))
             using (var writer = new BinaryWriter(fileStream))
             {
+                //컬럼 개수 저장(int)
+                writer.Write(5);
+
+                //컬럼 별 자료형 저장
+                writer.Write((byte)Define.ColumnType.Int32);
+                writer.Write((byte)Define.ColumnType.Int64);
+                writer.Write((byte)Define.ColumnType.Int64);
+                writer.Write((byte)Define.ColumnType.Int32);
+                writer.Write((byte)Define.ColumnType.Int32);
+
                 foreach (var item in items)
                 {
                     writer.Write(item.timeStamp);
@@ -76,13 +86,27 @@ namespace ByteConverter
             using (var fileStream = File.OpenRead(binPath))
             using (var reader = new BinaryReader(fileStream))
             {
+                int columnCount = reader.ReadInt32();
+                Define.ColumnType[] columnTypes = new Define.ColumnType[columnCount];
+                for(int i=0; i < columnCount; i++)
+                    columnTypes[i] = (Define.ColumnType)reader.ReadByte();
+
+                int row = 0;
                 while (fileStream.Position < fileStream.Length)
                 {
-                    Console.Write       ($"{reader.ReadInt32()}\t");
-                    Console.Write       ($"{reader.ReadInt64()}\t");
-                    Console.Write       ($"{reader.ReadInt64()}\t");
-                    Console.Write       ($"{reader.ReadInt32()}\t");
-                    Console.WriteLine   ($"{reader.ReadInt32()}\t");
+                    Console.Write($"{GetValue(columnTypes[row++ % columnCount])}\t");
+                    if (row % columnCount == 0)
+                        Console.WriteLine();
+                }
+
+                string GetValue(Define.ColumnType type)
+                {
+                    if (type == Define.ColumnType.Int32)
+                        return reader.ReadInt32().ToString();
+                    else if (type == Define.ColumnType.Int64)
+                        return reader.ReadInt64().ToString();
+                    else
+                        return "-1";
                 }
             }
         }
