@@ -35,9 +35,20 @@ namespace ByteConverter
             }
 
             items.Sort((left, right) => left.timeStamp - right.timeStamp);
+
+            byte[] columnTypes =
+            {
+                (byte)Define.ColumnType.Int32,
+                (byte)Define.ColumnType.Int64,
+                (byte)Define.ColumnType.Int64,
+                (byte)Define.ColumnType.Int32,
+                (byte)Define.ColumnType.Int32,
+            };
+
             var path = Path.Combine(workspace, "dummy.csv");
             using (var writer = new StreamWriter(path, false))
             {
+                writer.WriteLine(string.Join(",", columnTypes));
                 foreach(var item in items)
                 {
                     writer.WriteLine(string.Join(",",
@@ -46,6 +57,7 @@ namespace ByteConverter
             }
 
             GenerateBin(items);
+            PrintBinFile();
             System.Diagnostics.Process.Start(workspace);
         }
 
@@ -74,8 +86,6 @@ namespace ByteConverter
                     writer.Write(item.amount);
                 }
             }
-
-            PrintBinFile();
         }
 
         public static void PrintBinFile()
