@@ -102,7 +102,6 @@ namespace ByteConverter
 
             List<T> list = new List<T>();
             var binPath = Path.Combine(workspace, "dummy.bin");
-            
 
             using (var fileStream = File.OpenRead(binPath))
             using (var reader = new BinaryReader(fileStream))
@@ -115,7 +114,6 @@ namespace ByteConverter
                     columnTypes[i] = (Define.ColumnType)reader.ReadByte();
 
                 int row = 0;
-                FieldInfo[] fields = typeof(T).GetFields();
                 while (fileStream.Position < fileStream.Length)
                 {
                     T data = new T();
