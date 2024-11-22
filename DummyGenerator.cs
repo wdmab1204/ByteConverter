@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace ByteConverter
 {
     public struct ItemData
     {
         public int timeStamp;
+        public int templateId;
         public long dbID;
         public long userDbId;
-        public int templateId;
         public int amount;
     }
 
@@ -26,7 +27,7 @@ namespace ByteConverter
             var items = new List<ItemData>();
             var random = new Random();
 
-            for (int i = 0; i < 10 * 1024 * 1024; i++)
+            for (int i = 0; i < 20; i++)
             {
                 items.Add(new ItemData
                 {
@@ -43,9 +44,9 @@ namespace ByteConverter
             byte[] columnTypes = new byte[5]
             {
                 (byte)Define.ColumnType.Int32,
-                (byte)Define.ColumnType.Int64,
-                (byte)Define.ColumnType.Int64,
                 (byte)Define.ColumnType.Int32,
+                (byte)Define.ColumnType.Int64,
+                (byte)Define.ColumnType.Int64,
                 (byte)Define.ColumnType.Int32,
             };
 

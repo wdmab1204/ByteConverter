@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScriptDataLoader;
+using System;
 using System.IO;
 using System.Windows.Forms;
 using static ByteConverter.Define;
@@ -17,6 +18,14 @@ namespace ByteConverter
         private void OnClickSerializeButton(object sender, EventArgs e)
         {
             SerializeFiles(filePathText.Text);
+            ItemScript itemScript = new ItemScript();
+            itemScript.LoadScript(Path.Combine(workspace, "dummy.bin"));
+
+            for(int i = 0; i< 20; i++)
+            {
+                var data = itemScript.Get(i + 1).Data;
+                Console.WriteLine($"{data.timeStamp}\t{data.dbID}\t{data.userDbId}\t{data.templateId}\t{data.amount}");
+            }
         }
 
         private void SerializeFiles(string folderPath)

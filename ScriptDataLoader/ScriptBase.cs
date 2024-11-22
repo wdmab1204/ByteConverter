@@ -58,4 +58,8 @@ namespace ScriptDataLoader
             }
         }
     }
+
+    public class ItemScript : ScriptBase<ItemScriptData, ItemData>
+    {
+    }
 }
