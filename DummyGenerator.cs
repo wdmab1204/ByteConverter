@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace ByteConverter
 {
+    public struct ItemData
+    {
+        public int timeStamp;
+        public long dbID;
+        public long userDbId;
+        public int templateId;
+        public int amount;
+    }
+
     internal static class DummyGenerator
     {
         static string workspace => Directory.GetCurrentDirectory();
-
-        public struct ItemData
-        {
-            public int timeStamp;
-            public long dbID;
-            public long userDbId;
-            public int templateId;
-            public int amount;
-        }
 
         public static void Create()
         {
