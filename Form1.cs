@@ -32,8 +32,8 @@ namespace ByteConverter
                 if (string.Compare(extension, ".csv") != 0)
                     continue;
 
-                var binPath = Path.Combine(workspace, "dummy.bin");
-                using (StreamReader reader = new StreamReader(csvFilePath))
+                var binPath = Path.ChangeExtension(csvFilePath, ".bin");
+                using (var reader = new StreamReader(csvFilePath))
                 using (var fileStream = new FileStream(binPath, FileMode.Create, FileAccess.Write, FileShare.None))
                 using (var writer = new BinaryWriter(fileStream))
                 {
