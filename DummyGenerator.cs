@@ -13,6 +13,10 @@ namespace ByteConverter
         public int amount;
     }
 
+    //데이터 10*1024*1024일 때
+    //csv : 약 332mb
+    //bin : 약 286mb
+    //약 60mb 감소
     internal static class DummyGenerator
     {
         static string workspace => Directory.GetCurrentDirectory();
@@ -22,7 +26,7 @@ namespace ByteConverter
             var items = new List<ItemData>();
             var random = new Random();
 
-            for (int i = 0; i < 10 * 1024; i++)
+            for (int i = 0; i < 10 * 1024 * 1024; i++)
             {
                 items.Add(new ItemData
                 {
@@ -36,7 +40,7 @@ namespace ByteConverter
 
             items.Sort((left, right) => left.timeStamp - right.timeStamp);
 
-            byte[] columnTypes =
+            byte[] columnTypes = new byte[5]
             {
                 (byte)Define.ColumnType.Int32,
                 (byte)Define.ColumnType.Int64,
@@ -48,6 +52,7 @@ namespace ByteConverter
             var path = Path.Combine(workspace, "dummy.csv");
             using (var writer = new StreamWriter(path, false))
             {
+                writer.Write($"{columnTypes.Length},");
                 writer.WriteLine(string.Join(",", columnTypes));
                 foreach(var item in items)
                 {
