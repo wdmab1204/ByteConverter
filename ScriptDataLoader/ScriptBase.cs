@@ -4,11 +4,16 @@ using System.IO;
 
 namespace ScriptDataLoader
 {
-    public abstract class ScriptBase<TKey, TData> 
-        where TKey : ScriptDataBase<TData>, new()
+    public abstract class ScriptBase<TScriptData, TData> 
+        where TScriptData : ScriptDataBase<TData>, new()
         where TData : struct 
     {
-        protected Dictionary<TKey, TData> map = new Dictionary<TKey, TData>();
+        protected Dictionary<int, TScriptData> map = new Dictionary<int, TScriptData>();
+
+        public TScriptData Get(int key)
+        {
+            return map[key];
+        }
 
         public unsafe void LoadScript(string filePath)
         {
@@ -45,10 +50,10 @@ namespace ScriptDataLoader
                     }
                     row++;
 
-                    TKey key = new TKey();
-                    key.Data = data;
+                    TScriptData scriptData = new TScriptData();
+                    scriptData.Data = data;
 
-                    map.Add(key, data);
+                    map.Add(scriptData.GetKey(), scriptData);
                 }
             }
         }
