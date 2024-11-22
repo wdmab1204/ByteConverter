@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using static ByteConverter.Define;
 
 namespace ByteConverter
 {
     public partial class Form1 : Form
     {
+        static string workspace => Directory.GetCurrentDirectory();
+
         public Form1()
         {
             InitializeComponent();
@@ -30,33 +26,48 @@ namespace ByteConverter
 
            string[] filePaths = Directory.GetFiles(folderPath);
 
-            foreach(string filePath in filePaths)
+            foreach(string csvFilePath in filePaths)
             {
-                string extension = System.IO.Path.GetExtension(filePath);
+                string extension = System.IO.Path.GetExtension(csvFilePath);
                 if (string.Compare(extension, ".csv") != 0)
                     continue;
 
-                Console.WriteLine(filePath);
-                using (StreamReader reader = new StreamReader(filePath))
+                var binPath = Path.Combine(workspace, "dummy.bin");
+                using (StreamReader reader = new StreamReader(csvFilePath))
+                using (var fileStream = new FileStream(binPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var writer = new BinaryWriter(fileStream))
                 {
                     string line;
-                    while ((line = reader.ReadLine()) != null)
+                    string[] columnInfo = reader.ReadLine().Split(',');
+
+                    int columnCount = int.Parse(columnInfo[0]);
+                    Define.ColumnType[] columnTypes = new Define.ColumnType[columnCount];
+                    for (int i = 0; i < columnCount; i++)
+                        columnTypes[i] = (Define.ColumnType)byte.Parse(columnInfo[i + 1]);
+
+                    //컬럼 개수 저장(int)
+                    writer.Write(columnTypes.Length);
+
+                    //컬럼 별 자료형 저장
+                    for (int i = 0; i < columnTypes.Length; i++)
+                        writer.Write((byte)columnTypes[i]);
+
+                    while((line = reader.ReadLine()) != null)
                     {
                         string[] values = line.Split(',');
+                        int columnIndex = 0;
                         foreach (string value in values)
                         {
-                            Console.Write($"{value}\t");
+                            if (columnTypes[columnIndex] == ColumnType.Int32)
+                                writer.Write(int.Parse(value));
+                            else if (columnTypes[columnIndex] == ColumnType.Int64)
+                                writer.Write(long.Parse(value));
+
+                            columnIndex++;
                         }
-                        Console.WriteLine();
                     }
                 }
-                
             }
-        }
-
-        private void DeserializeFiles(string folderPath)
-        {
-            
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
