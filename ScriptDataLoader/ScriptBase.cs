@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace ScriptDataLoader
+namespace BinDataLoader
 {
     public abstract class ScriptBase<TScriptData, TData> 
         where TScriptData : ScriptDataBase<TData>, new()

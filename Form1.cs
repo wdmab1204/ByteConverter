@@ -1,4 +1,4 @@
-﻿using ScriptDataLoader;
+﻿using BinDataLoader;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -13,17 +13,19 @@ namespace ByteConverter
         public Form1()
         {
             InitializeComponent();
+            Console.WriteLine(Environment.Is64BitOperatingSystem);
         }
 
         private void OnClickSerializeButton(object sender, EventArgs e)
         {
             SerializeFiles(filePathText.Text);
-            ItemScript itemScript = new ItemScript();
-            itemScript.LoadScript(Path.Combine(workspace, "dummy.bin"));
+            //ItemScript itemScript = new ItemScript();
+            CSVDataLoader.ItemScript itemScript = new CSVDataLoader.ItemScript();
+            itemScript.LoadScript(Path.Combine(workspace, "dummy.csv"));
 
             for(int i = 0; i< 20; i++)
             {
-                var data = itemScript.Get(i + 1).Data;
+                var data = itemScript.Get(i + 1);
                 Console.WriteLine($"{data.timeStamp}\t{data.dbID}\t{data.userDbId}\t{data.templateId}\t{data.amount}");
             }
         }

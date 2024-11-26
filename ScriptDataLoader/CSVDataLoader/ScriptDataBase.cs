@@ -1,11 +1,7 @@
-﻿using ByteConverter;
-
-namespace BinDataLoader
+﻿namespace CSVDataLoader
 {
-    public abstract class ScriptDataBase<TData> where TData : struct
+    public abstract class ScriptDataBase
     {
-        public virtual TData Data { get; set; }
-
         public abstract int GetKey();
 
         public override int GetHashCode()
@@ -19,11 +15,17 @@ namespace BinDataLoader
         }
     }
 
-    public class ItemScriptData : ScriptDataBase<ItemData>
+    public class ItemScriptData : ScriptDataBase
     {
+        public int timeStamp;
+        public int templateId;
+        public long dbID;
+        public long userDbId;
+        public int amount;
+
         public override int GetKey()
         {
-            return Data.timeStamp;
+            return timeStamp;
         }
     }
 }
