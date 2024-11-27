@@ -27,7 +27,7 @@ namespace ByteConverter
             var items = new List<ItemData>();
             var random = new Random();
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 10 * 1024 * 1024; i++)
             {
                 items.Add(new ItemData
                 {

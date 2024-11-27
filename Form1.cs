@@ -1,5 +1,6 @@
 ﻿using BinDataLoader;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using static ByteConverter.Define;
@@ -18,14 +19,26 @@ namespace ByteConverter
 
         private void OnClickSerializeButton(object sender, EventArgs e)
         {
-            SerializeFiles(filePathText.Text);
-            //ItemScript itemScript = new ItemScript();
-            CSVDataLoader.ItemScript itemScript = new CSVDataLoader.ItemScript();
-            itemScript.LoadScript(Path.Combine(workspace, "dummy.csv"));
+            //SerializeFiles(filePathText.Text);
 
-            for(int i = 0; i< 20; i++)
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //bin
+            BinDataLoader.ItemScript itemScript = new BinDataLoader.ItemScript();
+            itemScript.LoadScript(Path.Combine(workspace, "dummy.bin"));
+
+            //csv
+            //CSVDataLoader.ItemScript itemScript = new CSVDataLoader.ItemScript();
+            //itemScript.LoadScript(Path.Combine(workspace, "dummy.csv"));
+
+            stopwatch.Stop();
+            Console.WriteLine($"Time taken: {stopwatch.ElapsedMilliseconds} ms");
+
+            for (int i = 0; i< 20; i++)
             {
-                var data = itemScript.Get(i + 1);
+                var data = itemScript.Get(i + 1).Data;
+                //var data = itemScript.Get(i + 1);
                 Console.WriteLine($"{data.timeStamp}\t{data.dbID}\t{data.userDbId}\t{data.templateId}\t{data.amount}");
             }
         }

@@ -19,8 +19,9 @@ namespace BinDataLoader
         {
             map.Clear();
 
-            using (var fileStream = File.OpenRead(filePath))
-            using (var reader = new BinaryReader(fileStream))
+            var bytes = File.ReadAllBytes(filePath);
+            using (var memoryStream = new MemoryStream(bytes))
+            using (var reader = new BinaryReader(memoryStream))
             {
                 //컬럼 개수
                 int columnCount = reader.ReadInt32();
@@ -30,7 +31,7 @@ namespace BinDataLoader
                     columnTypes[i] = (Define.ColumnType)reader.ReadByte();
 
                 int row = 0;
-                while (fileStream.Position < fileStream.Length)
+                while (memoryStream.Position < memoryStream.Length)
                 {
                     TData data = new TData();
                     TData* pData = &data;
