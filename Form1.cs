@@ -19,14 +19,14 @@ namespace ByteConverter
 
         private void OnClickSerializeButton(object sender, EventArgs e)
         {
-            //SerializeFiles(filePathText.Text);
+            SerializeFiles(filePathText.Text);
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             //bin
             BinDataLoader.ItemScript itemScript = new BinDataLoader.ItemScript();
-            itemScript.LoadScript(Path.Combine(workspace, "dummy.bin"));
+            itemScript.LoadScript(Path.Combine(workspace, "dummy.bytes"));
 
             //csv
             //CSVDataLoader.ItemScript itemScript = new CSVDataLoader.ItemScript();
@@ -37,7 +37,7 @@ namespace ByteConverter
 
             for (int i = 0; i< 20; i++)
             {
-                var data = itemScript.Get(i + 1).Data;
+                var data = itemScript.Get(i + 1);
                 //var data = itemScript.Get(i + 1);
                 Console.WriteLine($"{data.timeStamp}\t{data.dbID}\t{data.userDbId}\t{data.templateId}\t{data.amount}");
             }
@@ -56,27 +56,36 @@ namespace ByteConverter
                 if (string.Compare(extension, ".csv") != 0)
                     continue;
 
-                var binPath = Path.ChangeExtension(csvFilePath, ".bin");
+                var binPath = Path.ChangeExtension(csvFilePath, ".bytes");
                 using (var reader = new StreamReader(csvFilePath))
                 using (var fileStream = new FileStream(binPath, FileMode.Create, FileAccess.Write, FileShare.None))
                 using (var writer = new BinaryWriter(fileStream))
                 {
                     string line;
-                    string[] columnInfo = reader.ReadLine().Split(',');
+                    //string[] columnInfo = reader.ReadLine().Split(',');
 
-                    int columnCount = int.Parse(columnInfo[0]);
-                    Define.ColumnType[] columnTypes = new Define.ColumnType[columnCount];
-                    for (int i = 0; i < columnCount; i++)
-                        columnTypes[i] = (Define.ColumnType)byte.Parse(columnInfo[i + 1]);
+                    //int columnCount = int.Parse(columnInfo[0]);
+                    //Define.ColumnType[] columnTypes = new Define.ColumnType[columnCount];
+                    //for (int i = 0; i < columnCount; i++)
+                    //    columnTypes[i] = (Define.ColumnType)byte.Parse(columnInfo[i + 1]);
 
                     //컬럼 개수 저장(int)
-                    writer.Write(columnTypes.Length);
+                    //writer.Write(columnTypes.Length);
 
                     //컬럼 별 자료형 저장
-                    for (int i = 0; i < columnTypes.Length; i++)
-                        writer.Write((byte)columnTypes[i]);
+                    //for (int i = 0; i < columnTypes.Length; i++)
+                    //    writer.Write((byte)columnTypes[i]);
 
-                    while((line = reader.ReadLine()) != null)
+                    Define.ColumnType[] columnTypes = new Define.ColumnType[5]
+                    {
+                        ColumnType.Int32,
+                        ColumnType.Int32,
+                        ColumnType.Int64,
+                        ColumnType.Int64,
+                        ColumnType.Int32
+                    };
+
+                    while ((line = reader.ReadLine()) != null)
                     {
                         string[] values = line.Split(',');
                         int columnIndex = 0;

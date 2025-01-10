@@ -41,20 +41,9 @@ namespace ByteConverter
 
             items.Sort((left, right) => left.timeStamp - right.timeStamp);
 
-            byte[] columnTypes = new byte[5]
-            {
-                (byte)Define.ColumnType.Int32,
-                (byte)Define.ColumnType.Int32,
-                (byte)Define.ColumnType.Int64,
-                (byte)Define.ColumnType.Int64,
-                (byte)Define.ColumnType.Int32,
-            };
-
             var path = Path.Combine(workspace, "dummy.csv");
             using (var writer = new StreamWriter(path, false))
             {
-                writer.Write($"{columnTypes.Length},");
-                writer.WriteLine(string.Join(",", columnTypes));
                 foreach(var item in items)
                 {
                     writer.WriteLine(string.Join(",",
@@ -62,8 +51,6 @@ namespace ByteConverter
                 }
             }
 
-            //GenerateBin(columnTypes, items);
-            //PrintBinFile<ItemData>();
             System.Diagnostics.Process.Start(workspace);
         }
     }
